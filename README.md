@@ -19,3 +19,13 @@ Remotely access cameras and microphones
 
 - [ ] Developer mode
 - [ ] One container that does both frontend and backend
+
+## Dev logs
+
+```bash
+# Init go main then
+go mod init
+
+# Init frontend
+npm create vite@latest
+```
