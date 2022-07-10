@@ -3,31 +3,39 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"net/http"
+	"time"
 
-	"github.com/gin-gonic/gin"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/graph-gophers/graphql-go"
+	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/samber/lo"
 )
 
 //go:embed schema.graphql
 var schemaString string
-var schema *graphql.Schema
 
 //go:embed graphiql.html
 var graphiqlHTML []byte
 
-func init() {
-	// schema = graphql.MustParseSchema(schemaString, &Resolver{})
-}
-
 func main() {
-	r := gin.Default()
+	schema := graphql.MustParseSchema(schemaString, &Resolver{})
 
-	r.GET("/graphiql", func(c *gin.Context) {
-		lo.Must0(c.Writer.Write(graphiqlHTML))
+	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(10 * time.Second))
+
+	r.Get("/graphiql", func(w http.ResponseWriter, r *http.Request) {
+		lo.Must(w.Write(graphiqlHTML))
 	})
-	r.Any("/*proxyPath", proxy)
+	r.Handle("/graphql", &relay.Handler{Schema: schema})
+	r.Get("/*", proxy)
 
 	fmt.Println("Listening on port http://localhost:7777")
-	lo.Must0(r.Run(":7777"))
+	lo.Must0(http.ListenAndServe(":7777", r))
 }
