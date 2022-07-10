@@ -30,7 +30,7 @@ go mod init
 npm create vite@latest
 
 # Setup some kind of proxy in go
-# TODO
+# using gin
 
 # Start backend
 npm exec --yes -- nodemon@latest --signal SIGTERM --ext go --exec "go run . || false"
