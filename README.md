@@ -28,4 +28,13 @@ go mod init
 
 # Init frontend
 npm create vite@latest
+
+# Setup some kind of proxy in go
+# TODO
+
+# Start backend
+npm exec --yes -- nodemon@latest --signal SIGTERM --ext go --exec "go run . || false"
+
+# Start frontend
+npm --prefix frontend run dev
 ```
