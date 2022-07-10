@@ -1,38 +1,31 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
-	"net/http"
-	"net/http/httputil"
-	"net/url"
 
 	"github.com/gin-gonic/gin"
+	"github.com/graph-gophers/graphql-go"
 	"github.com/samber/lo"
 )
 
-func proxy(c *gin.Context) {
-	remote, err := url.Parse("http://localhost:3000")
-	if err != nil {
-		panic(err)
-	}
+//go:embed schema.graphql
+var schemaString string
+var schema *graphql.Schema
 
-	proxy := httputil.NewSingleHostReverseProxy(remote)
-	//Define the director func
-	//This is a good place to log, for example
-	proxy.Director = func(req *http.Request) {
-		req.Header = c.Request.Header
-		req.Host = remote.Host
-		req.URL.Scheme = remote.Scheme
-		req.URL.Host = remote.Host
-		req.URL.Path = c.Param("proxyPath")
-	}
+//go:embed graphiql.html
+var graphiqlHTML []byte
 
-	proxy.ServeHTTP(c.Writer, c.Request)
+func init() {
+	// schema = graphql.MustParseSchema(schemaString, &Resolver{})
 }
 
 func main() {
 	r := gin.Default()
 
+	r.GET("/graphiql", func(c *gin.Context) {
+		lo.Must0(c.Writer.Write(graphiqlHTML))
+	})
 	r.Any("/*proxyPath", proxy)
 
 	fmt.Println("Listening on port http://localhost:7777")

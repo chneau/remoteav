@@ -1,0 +1,11 @@
+schema {
+  query: Query
+}
+
+type Query {
+  cameras: [Camera!]!
+}
+
+interface Camera {
+  id: Int!
+}
