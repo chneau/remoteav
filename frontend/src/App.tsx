@@ -1,38 +1,7 @@
-import { useState } from "react";
-import "./App.css";
 import { useGetCameraIdsQuery } from "./generated/graphql";
-import logo from "./logo.svg";
 
-function App() {
-  const [count, setCount] = useState(0);
+export const App = () => {
   const { data } = useGetCameraIdsQuery();
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-            Learn React
-          </a>
-          {" | "}
-          <a className="App-link" href="https://vitejs.dev/guide/features.html" target="_blank" rel="noopener noreferrer">
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  );
-}
-
-export default App;
+  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+};
