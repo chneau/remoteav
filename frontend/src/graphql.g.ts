@@ -21,7 +21,6 @@ export type Camera = {
 };
 
 export type Query = {
-  __typename?: 'Query';
   cameras: Array<Camera>;
 };
 
@@ -33,7 +32,7 @@ export type SupportedFormat = {
 export type GetAllCamerasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllCamerasQuery = { __typename?: 'Query', cameras: Array<never> };
+export type GetAllCamerasQuery = { cameras: Array<never> };
 
 
 export const GetAllCamerasDocument = gql`
