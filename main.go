@@ -43,6 +43,8 @@ func getCameras() []*Camera {
 }
 
 func runRouter(schema *graphql.Schema) {
+	relayHandler := &relay.Handler{Schema: schema}
+
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -50,12 +52,14 @@ func runRouter(schema *graphql.Schema) {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(3 * time.Second))
 
-	r.With(middleware.Logger).Get("/graphiql", func(w http.ResponseWriter, r *http.Request) {
-		lo.Must(w.Write(graphiqlHTML))
-	})
-	r.With(middleware.Logger).Handle("/graphql", &relay.Handler{Schema: schema})
+	r.With(middleware.Logger).Get("/graphiql", graphiqlHandler)
+	r.With(middleware.Logger).Handle("/graphql", relayHandler)
 	r.Get("/*", proxy)
 
 	fmt.Println("Listening on port http://localhost:7777")
 	lo.Must0(http.ListenAndServe(":7777", r))
+}
+
+func graphiqlHandler(w http.ResponseWriter, r *http.Request) {
+	lo.Must(w.Write(graphiqlHTML))
 }
