@@ -1,0 +1,5 @@
+query GetCameraIds {
+  cameras {
+    id
+  }
+}
