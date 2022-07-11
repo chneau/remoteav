@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/chneau/remoteav/camera"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/graph-gophers/graphql-go"
@@ -28,16 +29,16 @@ func main() {
 	runRouter(schema)
 }
 
-func getCameras() []*Camera {
+func getCameras() []*camera.Camera {
 	files := lo.Must(ioutil.ReadDir("/dev/"))
-	result := []*Camera{}
+	result := []*camera.Camera{}
 	for _, file := range files {
 		fileName := file.Name()
 		if len(fileName) <= 5 || fileName[:5] != "video" {
 			continue
 		}
 		cameraNumber := lo.Must(strconv.Atoi(fileName[5:]))
-		result = append(result, &Camera{id: int32(cameraNumber)})
+		result = append(result, lo.Must(camera.New(cameraNumber)))
 	}
 	return result
 }

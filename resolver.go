@@ -1,17 +1,11 @@
 package main
 
+import "github.com/chneau/remoteav/camera"
+
 type Resolver struct {
-	cameras []*Camera
+	cameras []*camera.Camera
 }
 
-func (r *Resolver) Cameras() []*Camera {
+func (r *Resolver) Cameras() []*camera.Camera {
 	return r.cameras
-}
-
-type Camera struct {
-	id int32
-}
-
-func (c *Camera) Id() int32 {
-	return c.id
 }

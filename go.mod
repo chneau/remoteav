@@ -8,4 +8,8 @@ require (
 	github.com/samber/lo v1.25.0
 )
 
-require golang.org/x/exp v0.0.0-20220706164943-b4a6d9510983 // indirect
+require (
+	github.com/blackjack/webcam v0.0.0-20220329180758-ba064708e165 // indirect
+	golang.org/x/exp v0.0.0-20220706164943-b4a6d9510983 // indirect
+	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
+)
