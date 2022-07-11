@@ -21,7 +21,10 @@ var graphiqlHTML []byte
 
 func main() {
 	schema := graphql.MustParseSchema(schemaString, &Resolver{})
+	runRouter(schema)
+}
 
+func runRouter(schema *graphql.Schema) {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
