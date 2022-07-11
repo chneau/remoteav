@@ -17,10 +17,16 @@ export type Scalars = {
 
 export type Camera = {
   id: Scalars['Int'];
+  supportedFormats: Array<SupportedFormat>;
 };
 
 export type Query = {
   cameras: Array<Camera>;
+};
+
+export type SupportedFormat = {
+  format: Scalars['String'];
+  frameSizes: Array<Scalars['String']>;
 };
 
 export type GetCameraIdsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -33,6 +39,10 @@ export const GetCameraIdsDocument = gql`
     query GetCameraIds {
   cameras {
     id
+    supportedFormats {
+      format
+      frameSizes
+    }
   }
 }
     `;

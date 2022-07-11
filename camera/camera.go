@@ -15,6 +15,21 @@ func (c *Camera) Id() int32 {
 	return c.id
 }
 
+func (c *Camera) SupportedFormats() []SupportedFormat {
+	result := []SupportedFormat{}
+	for format, formatName := range c.GetSupportedFormats() {
+		frameSizes := []string{}
+		for _, frameSize := range c.GetSupportedFrameSizes(format) {
+			frameSizes = append(frameSizes, frameSize.GetString())
+		}
+		result = append(result, SupportedFormat{
+			format:     formatName,
+			frameSizes: frameSizes,
+		})
+	}
+	return result
+}
+
 func New(id int) (*Camera, error) {
 	cam, err := webcam.Open("/dev/video" + strconv.Itoa(id))
 	if err != nil {
