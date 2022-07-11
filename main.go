@@ -3,7 +3,9 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -20,8 +22,24 @@ var schemaString string
 var graphiqlHTML []byte
 
 func main() {
-	schema := graphql.MustParseSchema(schemaString, &Resolver{})
+	resolver := &Resolver{}
+	schema := graphql.MustParseSchema(schemaString, resolver)
+	resolver.cameras = getCameras()
 	runRouter(schema)
+}
+
+func getCameras() []*Camera {
+	files := lo.Must(ioutil.ReadDir("/dev/"))
+	result := []*Camera{}
+	for _, file := range files {
+		fileName := file.Name()
+		if len(fileName) <= 5 || fileName[:5] != "video" {
+			continue
+		}
+		cameraNumber := lo.Must(strconv.Atoi(fileName[5:]))
+		result = append(result, &Camera{id: int32(cameraNumber)})
+	}
+	return result
 }
 
 func runRouter(schema *graphql.Schema) {

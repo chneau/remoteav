@@ -33,7 +33,7 @@ npm create vite@latest
 # using gin
 
 # Start backend
-npm exec --yes -- nodemon@latest --signal SIGTERM --ext go --exec 'sudo env "PATH=$PATH" go run . || false'
+sudo npm exec --yes -- nodemon@latest --signal SIGTERM --ext go --exec 'sudo env "PATH=$PATH" go run . || false'
 
 # Start frontend
 npm --prefix frontend run dev

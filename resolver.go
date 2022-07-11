@@ -1,10 +1,11 @@
 package main
 
 type Resolver struct {
+	cameras []*Camera
 }
 
-func (_ *Resolver) Cameras() []*Camera {
-	return []*Camera{{id: 1}, {id: 2}, {id: 3}}
+func (r *Resolver) Cameras() []*Camera {
+	return r.cameras
 }
 
 type Camera struct {
