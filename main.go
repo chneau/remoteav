@@ -26,14 +26,13 @@ func main() {
 
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(10 * time.Second))
+	r.Use(middleware.Timeout(3 * time.Second))
 
-	r.Get("/graphiql", func(w http.ResponseWriter, r *http.Request) {
+	r.With(middleware.Logger).Get("/graphiql", func(w http.ResponseWriter, r *http.Request) {
 		lo.Must(w.Write(graphiqlHTML))
 	})
-	r.Handle("/graphql", &relay.Handler{Schema: schema})
+	r.With(middleware.Logger).Handle("/graphql", &relay.Handler{Schema: schema})
 	r.Get("/*", proxy)
 
 	fmt.Println("Listening on port http://localhost:7777")
