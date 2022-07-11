@@ -1,11 +1,10 @@
 overwrite: true
-schema: "../schema.graphql"
-documents: "src/**/*.graphql"
+watch: true
+schema: ../schema.graphql
+documents: src/**/*.graphql
 generates:
-  src/generated/graphql.tsx:
+  src/graphql.g.ts:
     plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-react-apollo"
-    config:
-      skipTypename: true
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo

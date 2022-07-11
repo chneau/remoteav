@@ -1,7 +1,7 @@
-import { useGetCameraIdsQuery } from "./generated/graphql";
+import { useGetAllCamerasQuery } from "./graphql.g";
 
 export const App = () => {
-  const { data } = useGetCameraIdsQuery();
-
-  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  const { data } = useGetAllCamerasQuery();
+  const cameras = data?.cameras?.filter((x) => x.supportedFormats?.length > 0);
+  return <pre>{JSON.stringify(cameras, null, 2)}</pre>;
 };

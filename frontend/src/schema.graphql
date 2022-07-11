@@ -1,4 +1,4 @@
-query GetCameraIds {
+query GetAllCameras {
   cameras {
     id
     supportedFormats {

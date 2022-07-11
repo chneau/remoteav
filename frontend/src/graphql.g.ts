@@ -21,6 +21,7 @@ export type Camera = {
 };
 
 export type Query = {
+  __typename?: 'Query';
   cameras: Array<Camera>;
 };
 
@@ -29,14 +30,14 @@ export type SupportedFormat = {
   frameSizes: Array<Scalars['String']>;
 };
 
-export type GetCameraIdsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllCamerasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCameraIdsQuery = { cameras: Array<never> };
+export type GetAllCamerasQuery = { __typename?: 'Query', cameras: Array<never> };
 
 
-export const GetCameraIdsDocument = gql`
-    query GetCameraIds {
+export const GetAllCamerasDocument = gql`
+    query GetAllCameras {
   cameras {
     id
     supportedFormats {
@@ -48,28 +49,28 @@ export const GetCameraIdsDocument = gql`
     `;
 
 /**
- * __useGetCameraIdsQuery__
+ * __useGetAllCamerasQuery__
  *
- * To run a query within a React component, call `useGetCameraIdsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCameraIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllCamerasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCamerasQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCameraIdsQuery({
+ * const { data, loading, error } = useGetAllCamerasQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetCameraIdsQuery(baseOptions?: Apollo.QueryHookOptions<GetCameraIdsQuery, GetCameraIdsQueryVariables>) {
+export function useGetAllCamerasQuery(baseOptions?: Apollo.QueryHookOptions<GetAllCamerasQuery, GetAllCamerasQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCameraIdsQuery, GetCameraIdsQueryVariables>(GetCameraIdsDocument, options);
+        return Apollo.useQuery<GetAllCamerasQuery, GetAllCamerasQueryVariables>(GetAllCamerasDocument, options);
       }
-export function useGetCameraIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCameraIdsQuery, GetCameraIdsQueryVariables>) {
+export function useGetAllCamerasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllCamerasQuery, GetAllCamerasQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCameraIdsQuery, GetCameraIdsQueryVariables>(GetCameraIdsDocument, options);
+          return Apollo.useLazyQuery<GetAllCamerasQuery, GetAllCamerasQueryVariables>(GetAllCamerasDocument, options);
         }
-export type GetCameraIdsQueryHookResult = ReturnType<typeof useGetCameraIdsQuery>;
-export type GetCameraIdsLazyQueryHookResult = ReturnType<typeof useGetCameraIdsLazyQuery>;
-export type GetCameraIdsQueryResult = Apollo.QueryResult<GetCameraIdsQuery, GetCameraIdsQueryVariables>;
+export type GetAllCamerasQueryHookResult = ReturnType<typeof useGetAllCamerasQuery>;
+export type GetAllCamerasLazyQueryHookResult = ReturnType<typeof useGetAllCamerasLazyQuery>;
+export type GetAllCamerasQueryResult = Apollo.QueryResult<GetAllCamerasQuery, GetAllCamerasQueryVariables>;
