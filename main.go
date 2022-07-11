@@ -30,7 +30,7 @@ func main() {
 }
 
 func getCameras() []*camera.Camera {
-	files := lo.Must(ioutil.ReadDir("/dev/"))
+	files := lo.Must(ioutil.ReadDir("/dev"))
 	result := []*camera.Camera{}
 	for _, file := range files {
 		fileName := file.Name()
