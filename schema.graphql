@@ -6,12 +6,12 @@ type Query {
   cameras: [Camera!]!
 }
 
-interface Camera {
+type Camera {
   id: Int!
   supportedFormats: [SupportedFormat!]!
 }
 
-interface SupportedFormat {
+type SupportedFormat {
   format: String!
   frameSizes: [String!]!
 }
