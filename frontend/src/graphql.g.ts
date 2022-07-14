@@ -25,14 +25,14 @@ export type Query = {
 };
 
 export type SupportedFormat = {
-  format: Scalars['String'];
   frameSizes: Array<Scalars['String']>;
+  name: Scalars['String'];
 };
 
 export type GetAllCamerasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllCamerasQuery = { cameras: Array<{ id: number, supportedFormats: Array<{ format: string, frameSizes: Array<string> }> }> };
+export type GetAllCamerasQuery = { cameras: Array<{ id: number, supportedFormats: Array<{ name: string, frameSizes: Array<string> }> }> };
 
 
 export const GetAllCamerasDocument = gql`
@@ -40,7 +40,7 @@ export const GetAllCamerasDocument = gql`
   cameras {
     id
     supportedFormats {
-      format
+      name
       frameSizes
     }
   }

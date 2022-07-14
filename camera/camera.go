@@ -23,7 +23,7 @@ func (c *Camera) SupportedFormats() []SupportedFormat {
 			frameSizes = append(frameSizes, frameSize.GetString())
 		}
 		result = append(result, SupportedFormat{
-			format:     formatName,
+			name:       formatName,
 			frameSizes: frameSizes,
 		})
 	}

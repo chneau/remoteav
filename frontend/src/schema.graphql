@@ -2,7 +2,7 @@ query GetAllCameras {
   cameras {
     id
     supportedFormats {
-      format
+      name
       frameSizes
     }
   }

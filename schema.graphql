@@ -12,6 +12,6 @@ type Camera {
 }
 
 type SupportedFormat {
-  format: String!
+  name: String!
   frameSizes: [String!]!
 }
