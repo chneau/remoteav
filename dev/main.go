@@ -14,27 +14,18 @@ import (
 )
 
 func main() {
-	resolver := &common.Resolver{}
+	resolver := common.NewResolver(lo.Must(camera.GetCameras()))
 	schema := graphql.MustParseSchema(common.SchemaString, resolver)
-	resolver.Cameras_ = lo.Must(camera.GetCameras())
-	runRouter(schema)
-}
 
-func runRouter(schema *graphql.Schema) {
-	relayHandler := &relay.Handler{Schema: schema}
-
-	r := chi.NewRouter()
-
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Recoverer)
-
-	r.With(middleware.Logger).Handle("/graphql", relayHandler)
-	r.Get("/graphiql", graphiqlHandler)
-	r.Get("/*", proxy)
-
+	router := chi.NewRouter()
+	router.Use(middleware.RequestID)
+	router.Use(middleware.RealIP)
+	router.Use(middleware.Recoverer)
+	router.With(middleware.Logger).Handle("/graphql", &relay.Handler{Schema: schema})
+	router.Get("/graphiql", graphiqlHandler)
+	router.Get("/*", proxy)
 	fmt.Println("Listening on port http://localhost:7777")
-	lo.Must0(http.ListenAndServe(":7777", r))
+	lo.Must0(http.ListenAndServe(":7777", router))
 }
 
 func graphiqlHandler(w http.ResponseWriter, r *http.Request) {

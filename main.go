@@ -17,25 +17,25 @@ import (
 )
 
 func main() {
-	resolver := &common.Resolver{Cameras_: lo.Must(camera.GetCameras())}
+	resolver := common.NewResolver(lo.Must(camera.GetCameras()))
 	schema := graphql.MustParseSchema(common.SchemaString, resolver)
 	dist := http.FileServer(http.FS(lo.Must(fs.Sub(dist.FrontendDist, "dist"))))
 
-	r := chi.NewRouter()
+	router := chi.NewRouter()
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Logger)
-	r.Use(middleware.CleanPath)
-	r.Use(middleware.GetHead)
-	r.Use(middleware.StripSlashes)
-	r.Use(middleware.Compress(5))
-	r.Use(middleware.Timeout(3 * time.Second))
+	router.Use(middleware.RequestID)
+	router.Use(middleware.RealIP)
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.Logger)
+	router.Use(middleware.CleanPath)
+	router.Use(middleware.GetHead)
+	router.Use(middleware.StripSlashes)
+	router.Use(middleware.Compress(5))
+	router.Use(middleware.Timeout(3 * time.Second))
 
-	r.Handle("/graphql", &relay.Handler{Schema: schema})
-	r.Handle("/*", dist)
+	router.Handle("/graphql", &relay.Handler{Schema: schema})
+	router.Handle("/*", dist)
 
 	fmt.Println("Listening on port http://localhost:7777")
-	lo.Must0(http.ListenAndServe(":7777", r))
+	lo.Must0(http.ListenAndServe(":7777", router))
 }
