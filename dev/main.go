@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/chneau/remoteav/camera"
 	"github.com/chneau/remoteav/common"
@@ -29,10 +28,9 @@ func runRouter(schema *graphql.Schema) {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(3 * time.Second))
 
-	r.With(middleware.Logger).Get("/graphiql", graphiqlHandler)
 	r.With(middleware.Logger).Handle("/graphql", relayHandler)
+	r.Get("/graphiql", graphiqlHandler)
 	r.Get("/*", proxy)
 
 	fmt.Println("Listening on port http://localhost:7777")

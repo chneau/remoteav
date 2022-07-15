@@ -7,7 +7,7 @@ import (
 )
 
 func proxy(w http.ResponseWriter, r *http.Request) {
-	url, _ := url.Parse("http://localhost:3000")
+	url, _ := url.Parse("http://localhost:5173")
 
 	proxy := httputil.ReverseProxy{Director: func(r *http.Request) {
 		r.URL.Scheme = url.Scheme
