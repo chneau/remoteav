@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "embed"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,6 +8,7 @@ import (
 	"time"
 
 	"github.com/chneau/remoteav/camera"
+	"github.com/chneau/remoteav/embed"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/graph-gophers/graphql-go"
@@ -16,15 +16,9 @@ import (
 	"github.com/samber/lo"
 )
 
-//go:embed schema.graphql
-var schemaString string
-
-//go:embed graphiql.html
-var graphiqlHTML []byte
-
 func main() {
 	resolver := &Resolver{}
-	schema := graphql.MustParseSchema(schemaString, resolver)
+	schema := graphql.MustParseSchema(embed.SchemaString, resolver)
 	resolver.cameras = getCameras()
 	runRouter(schema)
 }
@@ -62,5 +56,5 @@ func runRouter(schema *graphql.Schema) {
 }
 
 func graphiqlHandler(w http.ResponseWriter, r *http.Request) {
-	lo.Must(w.Write(graphiqlHTML))
+	lo.Must(w.Write(embed.GraphiqlHTML))
 }

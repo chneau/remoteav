@@ -1,6 +1,6 @@
 overwrite: true
 watch: true
-schema: ../schema.graphql
+schema: ../embed/schema.graphql
 documents: src/**/*.graphql
 generates:
   src/graphql.g.ts:
