@@ -15,18 +15,18 @@ docker run --privileged -p 7777:7777 --rm -it ghcr.io/chneau/remoteav
 ### Project
 
 - [ ] Access cameras and microphones remotely
-  - [ ] Frontend: Vite, React
-  - [ ] Backend: Go
-  - [ ] Api: GraphQL
-  - [ ] Container: Docker
-  - [ ] Container registry: GitHub Container Registry
-  - [ ] Continuous delivery: GitHub Actions
+  - [x] Frontend: Vite, React
+  - [x] Backend: Go
+  - [x] Api: GraphQL
+  - [x] Container: Docker
+  - [x] Container registry: GitHub Container Registry
+  - [x] Continuous delivery: GitHub Actions
   - [ ] Authentication: JWT
 
 ### Ease of life
 
-- [ ] Developer mode
-- [ ] One container that does both frontend and backend
+- [x] Developer mode
+- [x] One container that does both frontend and backend
 
 ## Dev logs
 
