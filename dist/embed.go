@@ -1,6 +1,4 @@
-//go:build embed
-
-package common
+package dist
 
 import "embed"
 
