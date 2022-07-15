@@ -33,7 +33,7 @@ npm create vite@latest
 # using gin
 
 # Start backend
-sudo npm exec --yes -- nodemon@latest --ignore frontdent --ext go,graphql,html --exec 'sudo fuser -k 7777/tcp; sudo env "PATH=$PATH" go run ./cmd/dev || false'
+sudo npm exec --yes -- nodemon@latest --ignore frontdent --ext go,graphql,html --exec 'sudo fuser -k 7777/tcp; sudo env "PATH=$PATH" go run ./dev || false'
 
 # Automatically regenerate frontend graphql schema
 npm --prefix frontend run graphql-codegen

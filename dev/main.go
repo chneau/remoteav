@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/chneau/remoteav/camera"
-	"github.com/chneau/remoteav/embed"
+	"github.com/chneau/remoteav/common"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/graph-gophers/graphql-go"
@@ -17,24 +15,10 @@ import (
 )
 
 func main() {
-	resolver := &Resolver{}
-	schema := graphql.MustParseSchema(embed.SchemaString, resolver)
-	resolver.cameras = getCameras()
+	resolver := &common.Resolver{}
+	schema := graphql.MustParseSchema(common.SchemaString, resolver)
+	resolver.Cameras_ = lo.Must(camera.GetCameras())
 	runRouter(schema)
-}
-
-func getCameras() []*camera.Camera {
-	files := lo.Must(ioutil.ReadDir("/dev"))
-	result := []*camera.Camera{}
-	for _, file := range files {
-		fileName := file.Name()
-		if len(fileName) <= 5 || fileName[:5] != "video" {
-			continue
-		}
-		cameraNumber := lo.Must(strconv.Atoi(fileName[5:]))
-		result = append(result, lo.Must(camera.New(cameraNumber)))
-	}
-	return result
 }
 
 func runRouter(schema *graphql.Schema) {
@@ -56,5 +40,5 @@ func runRouter(schema *graphql.Schema) {
 }
 
 func graphiqlHandler(w http.ResponseWriter, r *http.Request) {
-	lo.Must(w.Write(embed.GraphiqlHTML))
+	lo.Must(w.Write(common.GraphiqlHTML))
 }

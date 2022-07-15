@@ -1,6 +1,7 @@
 package camera
 
 import (
+	"io/ioutil"
 	"strconv"
 
 	"github.com/blackjack/webcam"
@@ -30,10 +31,34 @@ func (c *Camera) SupportedFormats() []SupportedFormat {
 	return result
 }
 
-func New(id int) (*Camera, error) {
+func new(id int) (*Camera, error) {
 	cam, err := webcam.Open("/dev/video" + strconv.Itoa(id))
 	if err != nil {
 		return nil, err
 	}
 	return &Camera{id: int32(id), Webcam: cam}, nil
+}
+
+func GetCameras() ([]*Camera, error) {
+	files, err := ioutil.ReadDir("/dev")
+	if err != nil {
+		return nil, err
+	}
+	result := []*Camera{}
+	for _, file := range files {
+		fileName := file.Name()
+		if len(fileName) <= 5 || fileName[:5] != "video" {
+			continue
+		}
+		cameraNumber, err := strconv.Atoi(fileName[5:])
+		if err != nil {
+			return nil, err
+		}
+		cam, err := new(cameraNumber)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, cam)
+	}
+	return result, nil
 }

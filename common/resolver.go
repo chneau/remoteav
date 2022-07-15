@@ -1,11 +1,11 @@
-package main
+package common
 
 import "github.com/chneau/remoteav/camera"
 
 type Resolver struct {
-	cameras []*camera.Camera
+	Cameras_ []*camera.Camera
 }
 
 func (r *Resolver) Cameras() []*camera.Camera {
-	return r.cameras
+	return r.Cameras_
 }
