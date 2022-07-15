@@ -1,9 +1,14 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 type Query {
   cameras: [Camera!]!
+}
+
+type Mutation {
+  setCamera(id: Int!, formatName: String!, frameSize: String!): Boolean!
 }
 
 type Camera {

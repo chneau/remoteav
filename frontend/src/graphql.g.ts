@@ -20,6 +20,17 @@ export type Camera = {
   supportedFormats: Array<SupportedFormat>;
 };
 
+export type Mutation = {
+  setCamera: Scalars['Boolean'];
+};
+
+
+export type MutationSetCameraArgs = {
+  formatName: Scalars['String'];
+  frameSize: Scalars['String'];
+  id: Scalars['Int'];
+};
+
 export type Query = {
   cameras: Array<Camera>;
 };
@@ -33,6 +44,15 @@ export type GetAllCamerasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllCamerasQuery = { cameras: Array<{ id: number, supportedFormats: Array<{ name: string, frameSizes: Array<string> }> }> };
+
+export type SetCameraMutationVariables = Exact<{
+  id: Scalars['Int'];
+  formatName: Scalars['String'];
+  frameSize: Scalars['String'];
+}>;
+
+
+export type SetCameraMutation = { setCamera: boolean };
 
 
 export const GetAllCamerasDocument = gql`
@@ -73,3 +93,36 @@ export function useGetAllCamerasLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetAllCamerasQueryHookResult = ReturnType<typeof useGetAllCamerasQuery>;
 export type GetAllCamerasLazyQueryHookResult = ReturnType<typeof useGetAllCamerasLazyQuery>;
 export type GetAllCamerasQueryResult = Apollo.QueryResult<GetAllCamerasQuery, GetAllCamerasQueryVariables>;
+export const SetCameraDocument = gql`
+    mutation SetCamera($id: Int!, $formatName: String!, $frameSize: String!) {
+  setCamera(id: $id, formatName: $formatName, frameSize: $frameSize)
+}
+    `;
+export type SetCameraMutationFn = Apollo.MutationFunction<SetCameraMutation, SetCameraMutationVariables>;
+
+/**
+ * __useSetCameraMutation__
+ *
+ * To run a mutation, you first call `useSetCameraMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetCameraMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setCameraMutation, { data, loading, error }] = useSetCameraMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      formatName: // value for 'formatName'
+ *      frameSize: // value for 'frameSize'
+ *   },
+ * });
+ */
+export function useSetCameraMutation(baseOptions?: Apollo.MutationHookOptions<SetCameraMutation, SetCameraMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetCameraMutation, SetCameraMutationVariables>(SetCameraDocument, options);
+      }
+export type SetCameraMutationHookResult = ReturnType<typeof useSetCameraMutation>;
+export type SetCameraMutationResult = Apollo.MutationResult<SetCameraMutation>;
+export type SetCameraMutationOptions = Apollo.BaseMutationOptions<SetCameraMutation, SetCameraMutationVariables>;

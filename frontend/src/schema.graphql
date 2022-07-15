@@ -7,3 +7,7 @@ query GetAllCameras {
     }
   }
 }
+
+mutation SetCamera($id: Int!, $formatName: String!, $frameSize: String!) {
+  setCamera(id: $id, formatName: $formatName, frameSize: $frameSize)
+}
