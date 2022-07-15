@@ -7,8 +7,8 @@ import (
 
 	"github.com/chneau/remoteav/camera"
 	"github.com/chneau/remoteav/common"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/samber/lo"

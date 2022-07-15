@@ -1,6 +1,14 @@
 # remoteav
 
+[![.github/workflows/publish.yml](https://github.com/chneau/remoteav/actions/workflows/publish.yml/badge.svg)](https://github.com/chneau/remoteav/actions/workflows/publish.yml)
+
 Remotely access cameras and microphones
+
+## Run with docker
+
+```bash
+docker run --privileged -p 7777:7777 --rm -it ghcr.io/chneau/remoteav
+```
 
 ## Objectives
 

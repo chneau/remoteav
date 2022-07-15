@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/blackjack/webcam v0.0.0-20220329180758-ba064708e165
-	github.com/go-chi/chi v1.5.4
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/graph-gophers/graphql-go v1.4.0
 	github.com/samber/lo v1.25.0
 )
