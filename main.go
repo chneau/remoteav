@@ -31,11 +31,12 @@ func runRouter(schema *graphql.Schema) {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.Compress(5))
 	r.Use(middleware.Timeout(3 * time.Second))
 
 	r.With(middleware.Logger).Get("/graphiql", graphiqlHandler)
 	r.With(middleware.Logger).Handle("/graphql", relayHandler)
-	dist := lo.Must(fs.Sub(dist.FrontendDist, "/dist"))
+	dist := lo.Must(fs.Sub(dist.FrontendDist, "dist"))
 	r.Handle("/*", http.FileServer(http.FS(dist)))
 
 	fmt.Println("Listening on port http://localhost:7777")
