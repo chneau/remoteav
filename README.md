@@ -37,17 +37,19 @@ go mod init
 # Init frontend
 npm create vite@latest
 
-# Setup some kind of proxy in go
-# using gin
+# Add yourself to these groups
+sudo adduser $USER video
+sudo adduser $USER audio
+exec sudo su -l $USER
 
 # Start backend
-sudo npm exec --yes -- nodemon@latest --ignore frontend --ext go,graphql,html --exec 'sudo fuser -k 7777/tcp; sudo env "PATH=$PATH" go run ./dev || false'
-
-# Automatically regenerate frontend graphql schema
-npm --prefix frontend run graphql-codegen
+npm exec --yes -- nodemon@latest --ignore frontend --ext go,graphql,html --exec 'sudo fuser -k 7777/tcp; go run ./dev || false'
 
 # Start frontend
 npm --prefix frontend run dev
+
+# Automatically regenerate frontend graphql schema
+npm --prefix frontend run graphql-codegen
 
 # Simulate production build
 npm --prefix frontend run build && rm -rf dist/dist && cp -r frontend/dist dist && sudo go run .
