@@ -26,7 +26,7 @@ export type Mutation = {
 
 
 export type MutationSetCameraArgs = {
-  formatName: Scalars['String'];
+  format: Scalars['String'];
   frameSize: Scalars['String'];
   id: Scalars['Int'];
 };
@@ -36,18 +36,18 @@ export type Query = {
 };
 
 export type SupportedFormat = {
+  format: Scalars['String'];
   frameSizes: Array<Scalars['String']>;
-  name: Scalars['String'];
 };
 
 export type GetAllCamerasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllCamerasQuery = { cameras: Array<{ id: number, supportedFormats: Array<{ name: string, frameSizes: Array<string> }> }> };
+export type GetAllCamerasQuery = { cameras: Array<{ id: number, supportedFormats: Array<{ format: string, frameSizes: Array<string> }> }> };
 
 export type SetCameraMutationVariables = Exact<{
   id: Scalars['Int'];
-  formatName: Scalars['String'];
+  format: Scalars['String'];
   frameSize: Scalars['String'];
 }>;
 
@@ -60,7 +60,7 @@ export const GetAllCamerasDocument = gql`
   cameras {
     id
     supportedFormats {
-      name
+      format
       frameSizes
     }
   }
@@ -77,8 +77,8 @@ export function useGetAllCamerasLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetAllCamerasQueryHookResult = ReturnType<typeof useGetAllCamerasQuery>;
 export type GetAllCamerasLazyQueryHookResult = ReturnType<typeof useGetAllCamerasLazyQuery>;
 export const SetCameraDocument = gql`
-    mutation SetCamera($id: Int!, $formatName: String!, $frameSize: String!) {
-  setCamera(id: $id, formatName: $formatName, frameSize: $frameSize)
+    mutation SetCamera($id: Int!, $format: String!, $frameSize: String!) {
+  setCamera(id: $id, format: $format, frameSize: $frameSize)
 }
     `;
 export function useSetCameraMutation(baseOptions?: Apollo.MutationHookOptions<SetCameraMutation, SetCameraMutationVariables>) {

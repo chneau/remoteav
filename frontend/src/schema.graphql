@@ -2,12 +2,12 @@ query GetAllCameras {
   cameras {
     id
     supportedFormats {
-      name
+      format
       frameSizes
     }
   }
 }
 
-mutation SetCamera($id: Int!, $formatName: String!, $frameSize: String!) {
-  setCamera(id: $id, formatName: $formatName, frameSize: $frameSize)
+mutation SetCamera($id: Int!, $format: String!, $frameSize: String!) {
+  setCamera(id: $id, format: $format, frameSize: $frameSize)
 }

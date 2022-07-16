@@ -1,12 +1,12 @@
 package camera
 
 type SupportedFormat struct {
-	name       string
+	format     string
 	frameSizes []string
 }
 
-func (s SupportedFormat) Name() string {
-	return s.name
+func (s SupportedFormat) Format() string {
+	return s.format
 }
 
 func (s SupportedFormat) FrameSizes() []string {

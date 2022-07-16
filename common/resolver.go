@@ -1,6 +1,10 @@
 package common
 
-import "github.com/chneau/remoteav/camera"
+import (
+	"log"
+
+	"github.com/chneau/remoteav/camera"
+)
 
 type Resolver struct {
 	cameras        []*camera.Camera
@@ -12,13 +16,14 @@ func (r *Resolver) Cameras() []*camera.Camera {
 }
 
 type SelectedCamera struct {
-	Id         int32
-	FormatName string
-	FrameSize  string
+	Id        int32
+	Format    string
+	FrameSize string
 }
 
 func (r *Resolver) SetCamera(args *SelectedCamera) bool {
 	r.selectedCamera = args
+	log.Printf("args: %#+v\n", args)
 	return true
 }
 

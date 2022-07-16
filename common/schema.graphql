@@ -8,7 +8,7 @@ type Query {
 }
 
 type Mutation {
-  setCamera(id: Int!, formatName: String!, frameSize: String!): Boolean!
+  setCamera(id: Int!, format: String!, frameSize: String!): Boolean!
 }
 
 type Camera {
@@ -17,6 +17,6 @@ type Camera {
 }
 
 type SupportedFormat {
-  name: String!
+  format: String!
   frameSizes: [String!]!
 }
