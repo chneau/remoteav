@@ -11,3 +11,8 @@ generates:
     config:
       skipTypeNameForRoot: true
       skipTypename: true
+      withMutationFn: false
+      withResultType: false
+      withMutationOptionsType: false
+      addDocBlocks: false
+      strictScalars: true
