@@ -1,7 +1,7 @@
 overwrite: true
 watch: true
 schema: ../common/schema.graphql
-documents: src/**/*.graphql
+documents: src/schema.graphql
 generates:
   src/graphql.g.ts:
     plugins:
