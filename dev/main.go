@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/chneau/remoteav/camera"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Llongfile)
 	resolver := common.NewResolver(lo.Must(camera.GetCameras()))
 	schema := graphql.MustParseSchema(common.SchemaString, resolver)
 

@@ -2,10 +2,9 @@ package camera
 
 import (
 	"errors"
-	"fmt"
 	"image"
 	"io/ioutil"
-	"os"
+	"log"
 	"strconv"
 
 	"github.com/blackjack/webcam"
@@ -81,7 +80,7 @@ func (c *Camera) Stream(imageStream chan *image.YCbCr) error {
 		switch err.(type) {
 		case nil:
 		case *webcam.Timeout:
-			fmt.Fprint(os.Stderr, err.Error())
+			log.Println(err)
 			continue
 		default:
 			return err

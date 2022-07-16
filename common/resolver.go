@@ -1,7 +1,6 @@
 package common
 
 import (
-	"fmt"
 	"image"
 	"log"
 
@@ -25,7 +24,9 @@ func (r *Resolver) Cameras() []*camera.Camera {
 func (r *Resolver) SetSelectedCamera(args *camera.SelectedCamera) bool {
 	if r.camera != nil {
 		_ = r.camera.StopStreaming()
+		_ = r.camera.Close()
 		r.camera = nil
+		r.cameras, _ = camera.GetCameras()
 	}
 	for _, camera := range r.cameras {
 		if camera.Id() == args.Id {
@@ -44,7 +45,7 @@ func (r *Resolver) SetSelectedCamera(args *camera.SelectedCamera) bool {
 	go func() {
 		err := r.camera.Stream(r.imageStream)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 	}()
 	return err == nil
