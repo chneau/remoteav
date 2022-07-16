@@ -43,7 +43,7 @@ sudo adduser $USER audio
 exec sudo su -l $USER
 
 # Start backend
-npm exec --yes -- nodemon@latest --ignore frontend --ext go,graphql,html --exec 'sudo fuser -k 7777/tcp; go run ./dev || false'
+npm exec --yes -- nodemon@latest --ignore frontend --ext go,graphql,html --exec 'fuser -k 7777/tcp; go run ./dev || false'
 
 # Start frontend
 npm --prefix frontend run dev
@@ -52,5 +52,5 @@ npm --prefix frontend run dev
 npm --prefix frontend run graphql-codegen
 
 # Simulate production build
-npm --prefix frontend run build && rm -rf dist/dist && cp -r frontend/dist dist && sudo go run .
+npm --prefix frontend run build && rm -rf dist/dist && cp -r frontend/dist dist && go run .
 ```
