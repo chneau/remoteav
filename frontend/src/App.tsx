@@ -6,6 +6,7 @@ export const App = () => {
   const [selectedCamera, setSelectedCamera] = useState<SetSelectedCameraMutationVariables>();
   const [setSelectedCameraMutation] = useSetSelectedCameraMutation();
   const [isSuccess, setIsSuccess] = useState<boolean | undefined>(undefined);
+  const selectedCameraText = (selectedCamera && `(${selectedCamera.id} ${selectedCamera.format} ${selectedCamera.frameSize}) => ${isSuccess}`) || "";
   useEffect(() => {
     if (!selectedCamera) return;
     (async () => {
@@ -13,12 +14,10 @@ export const App = () => {
       const result = await setSelectedCameraMutation({ variables: selectedCamera });
       setIsSuccess(result.data?.setSelectedCamera);
     })();
+    document.title = selectedCameraText;
   }, [selectedCamera]);
-  const selectedCameraText = selectedCamera && `(${selectedCamera.id} ${selectedCamera.format} ${selectedCamera.frameSize}) => ${isSuccess}` || "";
   return (
-    <>
-      <iframe key={selectedCameraText} src="/stream"></iframe>
-      <h1>Cameras {selectedCameraText}</h1>
+    <div>
       {data?.cameras.map(({ id, supportedFormats }) =>
         supportedFormats.map(({ format, frameSizes }) =>
           frameSizes.map((frameSize, i) => (
@@ -30,6 +29,6 @@ export const App = () => {
           ))
         )
       )}
-    </>
+    </div>
   );
 };
