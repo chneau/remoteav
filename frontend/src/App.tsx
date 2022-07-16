@@ -14,9 +14,11 @@ export const App = () => {
       setIsSuccess(result.data?.setSelectedCamera);
     })();
   }, [selectedCamera]);
+  const selectedCameraText = selectedCamera && `(${selectedCamera.id} ${selectedCamera.format} ${selectedCamera.frameSize}) => ${isSuccess}` || "";
   return (
     <>
-      <h1>Cameras {selectedCamera && `(${selectedCamera.id} ${selectedCamera.format} ${selectedCamera.frameSize}) => ${isSuccess}`}</h1>
+      <iframe key={selectedCameraText} src="/stream"></iframe>
+      <h1>Cameras {selectedCameraText}</h1>
       {data?.cameras.map(({ id, supportedFormats }) =>
         supportedFormats.map(({ format, frameSizes }) =>
           frameSizes.map((frameSize, i) => (

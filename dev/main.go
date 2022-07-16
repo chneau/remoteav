@@ -24,6 +24,7 @@ func main() {
 	router.With(middleware.Logger).Handle("/graphql", &relay.Handler{Schema: schema})
 	router.Get("/graphiql", graphiqlHandler)
 	router.Get("/*", proxy)
+	router.Get("/stream", common.StreamHandlerfunc(resolver.ImageStream()))
 	fmt.Println("Listening on port http://localhost:7777")
 	lo.Must0(http.ListenAndServe(":7777", router))
 }
