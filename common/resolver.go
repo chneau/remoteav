@@ -21,7 +21,7 @@ type SelectedCamera struct {
 	FrameSize string
 }
 
-func (r *Resolver) SetCamera(args *SelectedCamera) bool {
+func (r *Resolver) SetSelectedCamera(args *SelectedCamera) bool {
 	r.selectedCamera = args
 	log.Printf("args: %#+v\n", args)
 	return true

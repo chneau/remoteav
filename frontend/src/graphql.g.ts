@@ -21,11 +21,11 @@ export type Camera = {
 };
 
 export type Mutation = {
-  setCamera: Scalars['Boolean'];
+  setSelectedCamera: Scalars['Boolean'];
 };
 
 
-export type MutationSetCameraArgs = {
+export type MutationSetSelectedCameraArgs = {
   format: Scalars['String'];
   frameSize: Scalars['String'];
   id: Scalars['Int'];
@@ -45,14 +45,14 @@ export type GetAllCamerasQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllCamerasQuery = { cameras: Array<{ id: number, supportedFormats: Array<{ format: string, frameSizes: Array<string> }> }> };
 
-export type SetCameraMutationVariables = Exact<{
+export type SetSelectedCameraMutationVariables = Exact<{
   id: Scalars['Int'];
   format: Scalars['String'];
   frameSize: Scalars['String'];
 }>;
 
 
-export type SetCameraMutation = { setCamera: boolean };
+export type SetSelectedCameraMutation = { setSelectedCamera: boolean };
 
 
 export const GetAllCamerasDocument = gql`
@@ -76,13 +76,13 @@ export function useGetAllCamerasLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
         }
 export type GetAllCamerasQueryHookResult = ReturnType<typeof useGetAllCamerasQuery>;
 export type GetAllCamerasLazyQueryHookResult = ReturnType<typeof useGetAllCamerasLazyQuery>;
-export const SetCameraDocument = gql`
-    mutation SetCamera($id: Int!, $format: String!, $frameSize: String!) {
-  setCamera(id: $id, format: $format, frameSize: $frameSize)
+export const SetSelectedCameraDocument = gql`
+    mutation SetSelectedCamera($id: Int!, $format: String!, $frameSize: String!) {
+  setSelectedCamera(id: $id, format: $format, frameSize: $frameSize)
 }
     `;
-export function useSetCameraMutation(baseOptions?: Apollo.MutationHookOptions<SetCameraMutation, SetCameraMutationVariables>) {
+export function useSetSelectedCameraMutation(baseOptions?: Apollo.MutationHookOptions<SetSelectedCameraMutation, SetSelectedCameraMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SetCameraMutation, SetCameraMutationVariables>(SetCameraDocument, options);
+        return Apollo.useMutation<SetSelectedCameraMutation, SetSelectedCameraMutationVariables>(SetSelectedCameraDocument, options);
       }
-export type SetCameraMutationHookResult = ReturnType<typeof useSetCameraMutation>;
+export type SetSelectedCameraMutationHookResult = ReturnType<typeof useSetSelectedCameraMutation>;

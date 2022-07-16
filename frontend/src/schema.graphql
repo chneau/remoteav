@@ -8,6 +8,6 @@ query GetAllCameras {
   }
 }
 
-mutation SetCamera($id: Int!, $format: String!, $frameSize: String!) {
-  setCamera(id: $id, format: $format, frameSize: $frameSize)
+mutation SetSelectedCamera($id: Int!, $format: String!, $frameSize: String!) {
+  setSelectedCamera(id: $id, format: $format, frameSize: $frameSize)
 }
