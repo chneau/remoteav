@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func StreamHandlerfunc(ch <-chan *image.YCbCr) http.HandlerFunc {
+func StreamHandlerfunc(ch <-chan image.Image) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const boundary = `frame`
 		w.Header().Set("Content-Type", `multipart/x-mixed-replace;boundary=`+boundary)

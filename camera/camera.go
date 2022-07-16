@@ -1,8 +1,10 @@
 package camera
 
 import (
+	"bytes"
 	"errors"
 	"image"
+	"image/jpeg"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -73,8 +75,7 @@ func (c *Camera) StartStreamingFromSelectedCamera(settings *SelectedCamera) erro
 	return nil
 }
 
-func (c *Camera) Stream(imageStream chan *image.YCbCr) error {
-	frameSize := int(c.frameSize.MaxWidth*c.frameSize.MaxHeight) * 2
+func (c *Camera) Stream(imageStream chan image.Image) error {
 	for {
 		err := c.Webcam.WaitForFrame(100)
 		switch err.(type) {
@@ -89,7 +90,7 @@ func (c *Camera) Stream(imageStream chan *image.YCbCr) error {
 		if err != nil {
 			return err
 		}
-		if len(frame) == frameSize {
+		if c.pixelFormat == 1448695129 { // YUYV 4:2:2
 			yuyv := image.NewYCbCr(image.Rect(0, 0, int(c.frameSize.MaxWidth), int(c.frameSize.MaxHeight)), image.YCbCrSubsampleRatio422)
 			for i := range yuyv.Cb {
 				ii := i * 4
@@ -99,6 +100,13 @@ func (c *Camera) Stream(imageStream chan *image.YCbCr) error {
 				yuyv.Cr[i] = frame[ii+3]
 			}
 			imageStream <- yuyv
+		}
+		if c.pixelFormat == 1196444237 { // Motion-JPEG
+			img, err := jpeg.Decode(bytes.NewReader(frame))
+			if err != nil {
+				return err
+			}
+			imageStream <- img
 		}
 	}
 }

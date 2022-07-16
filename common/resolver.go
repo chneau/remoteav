@@ -10,10 +10,10 @@ import (
 type Resolver struct {
 	cameras     []*camera.Camera
 	camera      *camera.Camera
-	imageStream chan *image.YCbCr
+	imageStream chan image.Image
 }
 
-func (r *Resolver) ImageStream() <-chan *image.YCbCr {
+func (r *Resolver) ImageStream() <-chan image.Image {
 	return r.imageStream
 }
 
@@ -52,5 +52,5 @@ func (r *Resolver) SetSelectedCamera(args *camera.SelectedCamera) bool {
 }
 
 func NewResolver(cameras []*camera.Camera) *Resolver {
-	return &Resolver{cameras: cameras, imageStream: make(chan *image.YCbCr)}
+	return &Resolver{cameras: cameras, imageStream: make(chan image.Image)}
 }
