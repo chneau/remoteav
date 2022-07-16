@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/chneau/remoteav/camera"
+	"github.com/chneau/remoteav/av"
 	"github.com/chneau/remoteav/common"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -16,7 +16,7 @@ import (
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Llongfile)
-	resolver := common.NewResolver(lo.Must(camera.GetCameras()))
+	resolver := common.NewResolver(lo.Must(av.GetCameras()))
 	schema := graphql.MustParseSchema(common.SchemaString, resolver)
 
 	router := chi.NewRouter()

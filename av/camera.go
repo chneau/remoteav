@@ -1,4 +1,4 @@
-package camera
+package av
 
 import (
 	"bytes"
@@ -141,4 +141,17 @@ func GetCameras() ([]*Camera, error) {
 		result = append(result, cam)
 	}
 	return result, nil
+}
+
+type SupportedFormat struct {
+	format     string
+	frameSizes []string
+}
+
+func (s SupportedFormat) Format() string {
+	return s.format
+}
+
+func (s SupportedFormat) FrameSizes() []string {
+	return s.frameSizes
 }

@@ -4,12 +4,12 @@ import (
 	"image"
 	"log"
 
-	"github.com/chneau/remoteav/camera"
+	"github.com/chneau/remoteav/av"
 )
 
 type Resolver struct {
-	cameras     []*camera.Camera
-	camera      *camera.Camera
+	cameras     []*av.Camera
+	camera      *av.Camera
 	imageStream chan image.Image
 }
 
@@ -17,16 +17,16 @@ func (r *Resolver) ImageStream() <-chan image.Image {
 	return r.imageStream
 }
 
-func (r *Resolver) Cameras() []*camera.Camera {
+func (r *Resolver) Cameras() []*av.Camera {
 	return r.cameras
 }
 
-func (r *Resolver) SetSelectedCamera(args *camera.SelectedCamera) bool {
+func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
 	if r.camera != nil {
 		_ = r.camera.StopStreaming()
 		_ = r.camera.Close()
 		r.camera = nil
-		r.cameras, _ = camera.GetCameras()
+		r.cameras, _ = av.GetCameras()
 	}
 	for _, camera := range r.cameras {
 		if camera.Id() == args.Id {
@@ -51,6 +51,6 @@ func (r *Resolver) SetSelectedCamera(args *camera.SelectedCamera) bool {
 	return err == nil
 }
 
-func NewResolver(cameras []*camera.Camera) *Resolver {
+func NewResolver(cameras []*av.Camera) *Resolver {
 	return &Resolver{cameras: cameras, imageStream: make(chan image.Image)}
 }
