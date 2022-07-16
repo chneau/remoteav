@@ -17,7 +17,7 @@ export const App = () => {
     document.title = selectedCameraText;
   }, [selectedCamera]);
   return (
-    <div>
+    <div id="stream">
       {data?.cameras.map(({ id, supportedFormats }) =>
         supportedFormats.map(({ format, frameSizes }) =>
           frameSizes.map((frameSize, i) => (
