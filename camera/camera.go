@@ -1,15 +1,28 @@
 package camera
 
 import (
+	"errors"
+	"fmt"
+	"image"
 	"io/ioutil"
+	"os"
 	"strconv"
 
 	"github.com/blackjack/webcam"
+	"github.com/samber/lo"
 )
+
+type SelectedCamera struct {
+	Id        int32
+	Format    string
+	FrameSize string
+}
 
 type Camera struct {
 	*webcam.Webcam
-	id int32
+	id          int32
+	frameSize   webcam.FrameSize
+	pixelFormat webcam.PixelFormat
 }
 
 func (c *Camera) Id() int32 {
@@ -29,6 +42,66 @@ func (c *Camera) SupportedFormats() []SupportedFormat {
 		})
 	}
 	return result
+}
+
+func (c *Camera) StartStreamingFromSelectedCamera(settings *SelectedCamera) error {
+	if settings == nil {
+		return errors.New("settings is nil")
+	}
+	if c.id != settings.Id {
+		return errors.New("camera id mismatch")
+	}
+	pixelFormat, found := lo.FindKey(c.GetSupportedFormats(), settings.Format)
+	if !found {
+		return errors.New("unsupported format")
+	}
+	frameSize, found := lo.Find(c.GetSupportedFrameSizes(pixelFormat), func(frameSize webcam.FrameSize) bool {
+		return frameSize.GetString() == settings.FrameSize
+	})
+	if !found {
+		return errors.New("unsupported frame size")
+	}
+	_, _, _, err := c.SetImageFormat(pixelFormat, frameSize.MaxWidth, frameSize.MaxHeight)
+	if err != nil {
+		return err
+	}
+	err = c.StartStreaming()
+	if err != nil {
+		return err
+	}
+	c.frameSize = frameSize
+	c.pixelFormat = pixelFormat
+	return nil
+}
+
+func (c *Camera) Stream(imageStream chan *image.YCbCr) error {
+	frameSize := int(c.frameSize.MaxWidth*c.frameSize.MaxHeight) * 2
+	for {
+		err := c.Webcam.WaitForFrame(100)
+		switch err.(type) {
+		case nil:
+		case *webcam.Timeout:
+			fmt.Fprint(os.Stderr, err.Error())
+			continue
+		default:
+			return err
+		}
+		frame, err := c.Webcam.ReadFrame()
+		if err != nil {
+			return err
+		}
+		if len(frame) == frameSize {
+			yuyv := image.NewYCbCr(image.Rect(0, 0, int(c.frameSize.MaxWidth), int(c.frameSize.MaxHeight)), image.YCbCrSubsampleRatio422)
+			for i := range yuyv.Cb {
+				ii := i * 4
+				yuyv.Y[i*2] = frame[ii]
+				yuyv.Y[i*2+1] = frame[ii+2]
+				yuyv.Cb[i] = frame[ii+1]
+				yuyv.Cr[i] = frame[ii+3]
+			}
+			imageStream <- yuyv
+		}
+	}
 }
 
 func new(id int) (*Camera, error) {

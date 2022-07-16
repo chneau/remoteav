@@ -1,29 +1,22 @@
 package common
 
 import (
-	"github.com/blackjack/webcam"
+	"image"
+
 	"github.com/chneau/remoteav/camera"
-	"github.com/samber/lo"
 )
 
 type Resolver struct {
-	cameras        []*camera.Camera
-	camera         *camera.Camera
-	selectedCamera *SelectedCamera
+	cameras     []*camera.Camera
+	camera      *camera.Camera
+	imageStream chan *image.YCbCr
 }
 
 func (r *Resolver) Cameras() []*camera.Camera {
 	return r.cameras
 }
 
-type SelectedCamera struct {
-	Id        int32
-	Format    string
-	FrameSize string
-}
-
-func (r *Resolver) SetSelectedCamera(args *SelectedCamera) bool {
-	r.selectedCamera = args
+func (r *Resolver) SetSelectedCamera(args *camera.SelectedCamera) bool {
 	if r.camera != nil {
 		_ = r.camera.StopStreaming()
 		r.camera = nil
@@ -36,20 +29,13 @@ func (r *Resolver) SetSelectedCamera(args *SelectedCamera) bool {
 	if r.camera == nil {
 		return false
 	}
-	pixelFormat, found := lo.FindKey(r.camera.GetSupportedFormats(), args.Format)
-	if !found {
+	err := r.camera.StartStreamingFromSelectedCamera(args)
+	if err != nil {
 		return false
 	}
-	frameSize, found := lo.Find(r.camera.GetSupportedFrameSizes(pixelFormat), func(frameSize webcam.FrameSize) bool {
-		return frameSize.GetString() == args.FrameSize
-	})
-	if !found {
-		return false
-	}
-	_, _, _, err := r.camera.SetImageFormat(pixelFormat, frameSize.MaxWidth, frameSize.MaxHeight)
 	return err == nil
 }
 
 func NewResolver(cameras []*camera.Camera) *Resolver {
-	return &Resolver{cameras: cameras}
+	return &Resolver{cameras: cameras, imageStream: make(chan *image.YCbCr)}
 }
