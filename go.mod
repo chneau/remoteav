@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	github.com/gordonklaus/portaudio v0.0.0-20220320131553-cc649ad523c1 // indirect
 	golang.org/x/exp v0.0.0-20220713135740-79cabaa25d75 // indirect
 	golang.org/x/sys v0.0.0-20220712014510-0a85c31ab51e // indirect
 )

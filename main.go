@@ -35,6 +35,7 @@ func main() {
 
 	router.Handle("/graphql", &relay.Handler{Schema: schema})
 	router.Handle("/*", dist)
+	router.Get("/stream", common.StreamHandlerfunc(resolver.ImageStream()))
 
 	fmt.Println("Listening on port http://localhost:7777")
 	lo.Must0(http.ListenAndServe(":7777", router))
