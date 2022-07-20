@@ -23,7 +23,6 @@ func (r *Resolver) Cameras() []*av.Camera {
 
 func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
 	if r.camera != nil {
-		_ = r.camera.StopStreaming()
 		_ = r.camera.Close()
 		r.camera = nil
 		r.cameras, _ = av.GetCameras()
