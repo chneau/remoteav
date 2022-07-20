@@ -23,9 +23,15 @@ func (r *Resolver) Cameras() []*av.Camera {
 
 func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
 	if r.camera != nil {
-		_ = r.camera.Close()
+		err := r.camera.Close()
+		if err != nil {
+			log.Println(err)
+		}
 		r.camera = nil
-		r.cameras, _ = av.GetCameras()
+		r.cameras, err = av.GetCameras()
+		if err != nil {
+			log.Println(err)
+		}
 	}
 	for _, camera := range r.cameras {
 		if camera.Id() == args.Id {
