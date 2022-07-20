@@ -75,20 +75,15 @@ func (c *Camera) StartStreamingFromSelectedCamera(settings *SelectedCamera) erro
 	return nil
 }
 
-func (c *Camera) Stream(imageStream chan image.Image) error {
+func (c *Camera) Stream(imageStream chan image.Image) {
 	for {
 		err := c.Webcam.WaitForFrame(100)
-		switch err.(type) {
-		case nil:
-		case *webcam.Timeout:
+		if err != nil {
 			log.Println(err)
-			continue
-		default:
-			return err
 		}
 		frame, err := c.Webcam.ReadFrame()
 		if err != nil {
-			return err
+			return
 		}
 		if c.pixelFormat == 1448695129 { // YUYV 4:2:2
 			yuyv := image.NewYCbCr(image.Rect(0, 0, int(c.frameSize.MaxWidth), int(c.frameSize.MaxHeight)), image.YCbCrSubsampleRatio422)
@@ -104,7 +99,7 @@ func (c *Camera) Stream(imageStream chan image.Image) error {
 		if c.pixelFormat == 1196444237 { // Motion-JPEG
 			img, err := jpeg.Decode(bytes.NewReader(frame))
 			if err != nil {
-				return err
+				log.Println(err)
 			}
 			imageStream <- img
 		}

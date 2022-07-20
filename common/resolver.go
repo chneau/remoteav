@@ -3,6 +3,7 @@ package common
 import (
 	"image"
 	"log"
+	"sync"
 
 	"github.com/chneau/remoteav/av"
 )
@@ -11,6 +12,7 @@ type Resolver struct {
 	cameras     []*av.Camera
 	camera      *av.Camera
 	imageStream chan image.Image
+	mutex       sync.Mutex
 }
 
 func (r *Resolver) ImageStream() <-chan image.Image {
@@ -22,6 +24,8 @@ func (r *Resolver) Cameras() []*av.Camera {
 }
 
 func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
 	if r.camera != nil {
 		err := r.camera.Close()
 		if err != nil {
@@ -42,20 +46,20 @@ func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
 		log.Println("camera not found")
 		return false
 	}
-	err := r.camera.StartStreamingFromSelectedCamera(args)
-	if err != nil {
-		log.Println(err)
-		return false
-	}
-	go func() {
-		err := r.camera.Stream(r.imageStream)
+	retries := 10
+	for retries > 0 {
+		retries--
+		err := r.camera.StartStreamingFromSelectedCamera(args)
 		if err != nil {
-			log.Println(err)
+			log.Println("retry", err)
+			continue
 		}
-	}()
-	return err == nil
+		go r.camera.Stream(r.imageStream)
+		return true
+	}
+	return false
 }
 
 func NewResolver(cameras []*av.Camera) *Resolver {
-	return &Resolver{cameras: cameras, imageStream: make(chan image.Image)}
+	return &Resolver{cameras: cameras, imageStream: make(chan image.Image, 10)}
 }
