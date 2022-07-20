@@ -1,17 +1,17 @@
 on:
-  push:
-    branches:
-      - publish
+  push: { branches: [publish] }
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
+    permissions: { packages: write, contents: read }
+    env:
+      DOCKER_BUILDKIT: 1
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/remoteav
+      DOCKERFILE: Dockerfile
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          DOCKER_BUILDKIT=1 docker build . --tag ghcr.io/chneau/remoteav
-          docker login ghcr.io --username $ --password "${{ github.token }}"
-          docker push ghcr.io/chneau/remoteav
+      - run: echo "${{ github.token }}" | docker login ghcr.io --username $ --password-stdin
+      - run: docker build --file $DOCKERFILE --tag $IMAGE_NAME .
+      - run: docker push $IMAGE_NAME
