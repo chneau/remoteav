@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/chneau/remoteav/av"
 	"github.com/chneau/remoteav/common"
 	"github.com/chneau/remoteav/dist"
 	"github.com/go-chi/chi/v5"
@@ -17,7 +16,7 @@ import (
 )
 
 func main() {
-	resolver := common.NewResolver(lo.Must(av.GetCameras()))
+	resolver := common.NewResolver()
 	schema := graphql.MustParseSchema(common.SchemaString, resolver)
 	dist := http.FileServer(http.FS(lo.Must(fs.Sub(dist.FrontendDist, "dist"))))
 

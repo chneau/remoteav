@@ -60,6 +60,10 @@ func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
 	return false
 }
 
-func NewResolver(cameras []*av.Camera) *Resolver {
+func NewResolver() *Resolver {
+	cameras, err := av.GetCameras()
+	if err != nil {
+		log.Println(err)
+	}
 	return &Resolver{cameras: cameras, imageStream: make(chan image.Image, 10)}
 }

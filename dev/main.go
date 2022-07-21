@@ -28,7 +28,7 @@ func main() {
 	}
 
 	log.SetFlags(log.LstdFlags | log.Llongfile)
-	resolver := common.NewResolver(lo.Must(av.GetCameras()))
+	resolver := common.NewResolver()
 	schema := graphql.MustParseSchema(common.SchemaString, resolver)
 
 	router := chi.NewRouter()
