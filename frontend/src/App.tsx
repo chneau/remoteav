@@ -9,11 +9,7 @@ const Button = styled.button`
   }
 `;
 
-interface StreamDivProps {
-  stream: string;
-}
-
-const StreamDiv = styled.div<StreamDivProps>`
+const StreamDiv = styled.div<{ stream: string }>`
   min-height: 100vh;
   background-image: url("/video");
   background-position: center;
