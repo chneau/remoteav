@@ -20,7 +20,7 @@ type SelectedCamera struct {
 }
 
 type Camera struct {
-	Webcam      *webcam.Webcam
+	webcam      *webcam.Webcam
 	id          int32
 	frameSize   webcam.FrameSize
 	pixelFormat webcam.PixelFormat
@@ -32,9 +32,9 @@ func (c *Camera) Id() int32 {
 
 func (c *Camera) SupportedFormats() []SupportedFormat {
 	result := []SupportedFormat{}
-	for format, formatName := range c.Webcam.GetSupportedFormats() {
+	for format, formatName := range c.webcam.GetSupportedFormats() {
 		frameSizes := []string{}
-		for _, frameSize := range c.Webcam.GetSupportedFrameSizes(format) {
+		for _, frameSize := range c.webcam.GetSupportedFrameSizes(format) {
 			frameSizes = append(frameSizes, frameSize.GetString())
 		}
 		result = append(result, SupportedFormat{
@@ -52,21 +52,21 @@ func (c *Camera) StartStreamingFromSelectedCamera(settings *SelectedCamera) erro
 	if c.id != settings.Id {
 		return errors.New("camera id mismatch")
 	}
-	pixelFormat, found := lo.FindKey(c.Webcam.GetSupportedFormats(), settings.Format)
+	pixelFormat, found := lo.FindKey(c.webcam.GetSupportedFormats(), settings.Format)
 	if !found {
 		return errors.New("unsupported format")
 	}
-	frameSize, found := lo.Find(c.Webcam.GetSupportedFrameSizes(pixelFormat), func(frameSize webcam.FrameSize) bool {
+	frameSize, found := lo.Find(c.webcam.GetSupportedFrameSizes(pixelFormat), func(frameSize webcam.FrameSize) bool {
 		return frameSize.GetString() == settings.FrameSize
 	})
 	if !found {
 		return errors.New("unsupported frame size")
 	}
-	_, _, _, err := c.Webcam.SetImageFormat(pixelFormat, frameSize.MaxWidth, frameSize.MaxHeight)
+	_, _, _, err := c.webcam.SetImageFormat(pixelFormat, frameSize.MaxWidth, frameSize.MaxHeight)
 	if err != nil {
 		return err
 	}
-	err = c.Webcam.StartStreaming()
+	err = c.webcam.StartStreaming()
 	if err != nil {
 		return err
 	}
@@ -76,16 +76,16 @@ func (c *Camera) StartStreamingFromSelectedCamera(settings *SelectedCamera) erro
 }
 
 func (c *Camera) Close() error {
-	return c.Webcam.Close()
+	return c.webcam.Close()
 }
 
 func (c *Camera) Stream(stream chan<- image.Image) {
 	for {
-		err := c.Webcam.WaitForFrame(100)
+		err := c.webcam.WaitForFrame(100)
 		if err != nil {
 			log.Println(err)
 		}
-		frame, err := c.Webcam.ReadFrame()
+		frame, err := c.webcam.ReadFrame()
 		if err != nil {
 			return
 		}
@@ -115,7 +115,7 @@ func new(id int) (*Camera, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Camera{id: int32(id), Webcam: cam}, nil
+	return &Camera{id: int32(id), webcam: cam}, nil
 }
 
 func GetCameras() ([]*Camera, error) {

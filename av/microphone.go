@@ -8,7 +8,7 @@ import (
 )
 
 type Microphone struct {
-	DeviceInfo *portaudio.DeviceInfo
+	deviceInfo *portaudio.DeviceInfo
 	stream     *portaudio.Stream
 }
 
@@ -20,7 +20,7 @@ func (m *Microphone) Close() error {
 }
 
 func (m *Microphone) Stream(stream chan<- []float32) {
-	parameters := portaudio.LowLatencyParameters(m.DeviceInfo, nil)
+	parameters := portaudio.LowLatencyParameters(m.deviceInfo, nil)
 	var err error
 	m.stream, err = portaudio.OpenStream(parameters, func(in []float32) {
 		stream <- in
@@ -56,7 +56,7 @@ func GetMicrophones() ([]*Microphone, error) {
 	microphones := []*Microphone{}
 	for _, device := range devices {
 		if device.MaxInputChannels > 0 {
-			microphones = append(microphones, &Microphone{DeviceInfo: device})
+			microphones = append(microphones, &Microphone{deviceInfo: device})
 		}
 	}
 	return microphones, nil
