@@ -56,4 +56,6 @@ npm --prefix frontend run build && rm -rf dist/dist && cp -r frontend/dist dist 
 
 # Install production version
 npm --prefix frontend run build && rm -rf dist/dist && cp -r frontend/dist dist && go install .
+
+# To make portaudio properly installed on ubuntu, had to use `brew install portaudio`, the apt version was not working
 ```
