@@ -8,14 +8,24 @@ query GetAllCameras {
   }
 }
 
+query GetVideoPath {
+  videoPath
+}
+
 mutation SetSelectedCamera($id: Int!, $format: String!, $frameSize: String!) {
   setSelectedCamera(id: $id, format: $format, frameSize: $frameSize)
+}
+
+query GetAllMicrophones {
+  microphones {
+    name
+  }
 }
 
 query GetAudioPath {
   audioPath
 }
 
-query GetVideoPath {
-  videoPath
+mutation SetSelectedMicrophone($name: String!) {
+  setSelectedMicrophone(name: $name)
 }
