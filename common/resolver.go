@@ -21,7 +21,27 @@ type Resolver struct {
 }
 
 func (r *Resolver) SetSelectedMicrophone(args *av.SelectedMicrophone) bool {
-	return false
+	r.audioMutex.Lock()
+	defer r.audioMutex.Unlock()
+	if r.selectedMicrophone != nil {
+		err := r.selectedMicrophone.Close()
+		if err != nil {
+			log.Println(err)
+		}
+		r.selectedMicrophone = nil
+	}
+	for _, microphone := range r.microphones {
+		if microphone.Name() == args.Name {
+			r.selectedMicrophone = microphone
+			return true
+		}
+	}
+	if r.selectedMicrophone == nil {
+		log.Println("microphone not found")
+		return false
+	}
+	go r.selectedMicrophone.Stream(r.audioStream)
+	return true
 }
 
 func (r *Resolver) AudioMutex() <-chan []float32 {
