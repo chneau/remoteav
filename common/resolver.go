@@ -8,11 +8,14 @@ import (
 	"github.com/chneau/remoteav/av"
 )
 
+const AudioPath = "/audio"
+const VideoPath = "/video"
+
 type Resolver struct {
 	cameras        []*av.Camera
 	selectedCamera *av.Camera
-	imageStream    chan image.Image
-	imageMutex     sync.Mutex
+	videoStream    chan image.Image
+	videoMutex     sync.Mutex
 
 	microphones        []*av.Microphone
 	selectedMicrophone *av.Microphone
@@ -44,7 +47,7 @@ func (r *Resolver) SetSelectedMicrophone(args *av.SelectedMicrophone) bool {
 	return true
 }
 
-func (r *Resolver) AudioMutex() <-chan []float32 {
+func (r *Resolver) AudioStream() <-chan []float32 {
 	return r.audioStream
 }
 
@@ -52,17 +55,25 @@ func (r *Resolver) Microphones() []*av.Microphone {
 	return r.microphones
 }
 
-func (r *Resolver) ImageStream() <-chan image.Image {
-	return r.imageStream
+func (r *Resolver) AudioPath() string {
+	return AudioPath
+}
+
+func (r *Resolver) VideoStream() <-chan image.Image {
+	return r.videoStream
 }
 
 func (r *Resolver) Cameras() []*av.Camera {
 	return r.cameras
 }
 
+func (r *Resolver) VideoPath() string {
+	return VideoPath
+}
+
 func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
-	r.imageMutex.Lock()
-	defer r.imageMutex.Unlock()
+	r.videoMutex.Lock()
+	defer r.videoMutex.Unlock()
 	if r.selectedCamera != nil {
 		err := r.selectedCamera.Close()
 		if err != nil {
@@ -91,7 +102,7 @@ func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
 			log.Println("retry", err)
 			continue
 		}
-		go r.selectedCamera.Stream(r.imageStream)
+		go r.selectedCamera.Stream(r.videoStream)
 		return true
 	}
 	return false
@@ -108,7 +119,7 @@ func NewResolver() *Resolver {
 	}
 	return &Resolver{
 		cameras:     cameras,
-		imageStream: make(chan image.Image, 10),
+		videoStream: make(chan image.Image, 10),
 		microphones: microphones,
 		audioStream: make(chan []float32, 10),
 	}

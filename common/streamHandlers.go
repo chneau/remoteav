@@ -2,6 +2,7 @@ package common
 
 import (
 	"bytes"
+	"encoding/binary"
 	"image"
 	"image/jpeg"
 	"mime/multipart"
@@ -10,7 +11,7 @@ import (
 	"strconv"
 )
 
-func StreamHandlerfunc(ch <-chan image.Image) http.HandlerFunc {
+func StreamVideoHandler(ch <-chan image.Image) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const boundary = `frame`
 		w.Header().Set("Content-Type", `multipart/x-mixed-replace;boundary=`+boundary)
@@ -36,6 +37,22 @@ func StreamHandlerfunc(ch <-chan image.Image) http.HandlerFunc {
 			_, err = iw.Write(b)
 			if err != nil {
 				return
+			}
+		}
+	}
+}
+
+func StreamAudioHandler(ch <-chan []float32) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Connection", "Keep-Alive")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("Transfer-Encoding", "chunked")
+		w.Header().Set("Content-Type", "audio/wave")
+		for frame := range ch {
+			err := binary.Write(w, binary.BigEndian, &frame)
+			if err != nil {
+				panic(err)
 			}
 		}
 	}

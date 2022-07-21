@@ -39,7 +39,8 @@ func main() {
 	url := lo.Must(url.Parse("http://localhost:5173"))
 	proxy := httputil.NewSingleHostReverseProxy(url)
 	router.Get("/*", proxy.ServeHTTP)
-	router.Get("/stream", common.StreamHandlerfunc(resolver.ImageStream()))
+	router.Get(common.VideoPath, common.StreamVideoHandler(resolver.VideoStream()))
+	router.Get(common.AudioPath, common.StreamAudioHandler(resolver.AudioStream()))
 	fmt.Println("Listening on port http://localhost:7777")
 	lo.Must0(http.ListenAndServe(":7777", router))
 }

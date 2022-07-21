@@ -11,6 +11,8 @@ type Query {
 type Mutation {
   setSelectedCamera(id: Int!, format: String!, frameSize: String!): Boolean!
   setSelectedMicrophone(name: String!): Boolean!
+  audioPath: String!
+  videoPath: String!
 }
 
 type Microphone {
