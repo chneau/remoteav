@@ -53,4 +53,7 @@ npm --prefix frontend run graphql-codegen
 
 # Simulate production build
 npm --prefix frontend run build && rm -rf dist/dist && cp -r frontend/dist dist && go run .
+
+# Install production version
+npm --prefix frontend run build && rm -rf dist/dist && cp -r frontend/dist dist && go install .
 ```
