@@ -4,6 +4,7 @@ import (
 	"image"
 	"log"
 	"sync"
+	"time"
 
 	"github.com/chneau/remoteav/av"
 )
@@ -100,6 +101,7 @@ func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
 		err := r.selectedCamera.StartStreamingFromSelectedCamera(args)
 		if err != nil {
 			log.Println("retry", err)
+			time.Sleep(time.Millisecond * 100)
 			continue
 		}
 		go r.selectedCamera.Stream(r.videoStream)
