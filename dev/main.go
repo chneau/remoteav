@@ -17,6 +17,11 @@ import (
 )
 
 func main() {
+	microphones := lo.Must(av.GetMicrophones())
+	fmt.Print("\033[H\033[2J") // Clear screen
+	log.Printf("microphones: %#+v\n", microphones)
+	microphones[0].Stream(make(chan []float32))
+
 	log.SetFlags(log.LstdFlags | log.Llongfile)
 	resolver := common.NewResolver(lo.Must(av.GetCameras()))
 	schema := graphql.MustParseSchema(common.SchemaString, resolver)
