@@ -1,8 +1,31 @@
 import { useEffect, useState } from "react";
-import { SetSelectedCameraMutationVariables, useGetAllCamerasQuery, useSetSelectedCameraMutation } from "./graphql.g";
+import styled from "styled-components";
+import { SetSelectedCameraMutationVariables, useGetAllCamerasQuery, useGetVideoPathQuery, useSetSelectedCameraMutation } from "./graphql.g";
+
+const Button = styled.button`
+  opacity: 0.2;
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+interface StreamDivProps {
+  stream: string;
+}
+
+const StreamDiv = styled.div<StreamDivProps>`
+  min-height: 100vh;
+  background-image: url("/video");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: black;
+`;
 
 export const App = () => {
   const { data } = useGetAllCamerasQuery();
+  const { data: videoPath } = useGetVideoPathQuery();
+  const videoStreamPath = videoPath?.videoPath ?? "";
   const [selectedCamera, setSelectedCamera] = useState<SetSelectedCameraMutationVariables>();
   const [setSelectedCameraMutation] = useSetSelectedCameraMutation();
   const [isSuccess, setIsSuccess] = useState<boolean | undefined>(undefined);
@@ -17,18 +40,18 @@ export const App = () => {
     document.title = selectedCameraText;
   }, [selectedCamera]);
   return (
-    <div id="stream">
+    <StreamDiv stream={videoStreamPath}>
       {data?.cameras.map(({ id, supportedFormats }) =>
         supportedFormats.map(({ format, frameSizes }) =>
           frameSizes.map((frameSize, i) => (
             <div key={id + format + frameSize + i}>
-              <button onClick={() => setSelectedCamera({ id, format, frameSize })}>
+              <Button onClick={() => setSelectedCamera({ id, format, frameSize })}>
                 {id} _ {format} _ {frameSize}
-              </button>
+              </Button>
             </div>
           ))
         )
       )}
-    </div>
+    </StreamDiv>
   );
 };

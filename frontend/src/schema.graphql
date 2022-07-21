@@ -11,3 +11,11 @@ query GetAllCameras {
 mutation SetSelectedCamera($id: Int!, $format: String!, $frameSize: String!) {
   setSelectedCamera(id: $id, format: $format, frameSize: $frameSize)
 }
+
+query GetAudioPath {
+  audioPath
+}
+
+query GetVideoPath {
+  videoPath
+}

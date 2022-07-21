@@ -6,13 +6,13 @@ schema {
 type Query {
   cameras: [Camera!]!
   microphones: [Microphone!]!
+  audioPath: String!
+  videoPath: String!
 }
 
 type Mutation {
   setSelectedCamera(id: Int!, format: String!, frameSize: String!): Boolean!
   setSelectedMicrophone(name: String!): Boolean!
-  audioPath: String!
-  videoPath: String!
 }
 
 type Microphone {
