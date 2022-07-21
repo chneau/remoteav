@@ -9,10 +9,27 @@ import (
 )
 
 type Resolver struct {
-	cameras     []*av.Camera
-	camera      *av.Camera
-	imageStream chan image.Image
-	mutex       sync.Mutex
+	cameras        []*av.Camera
+	selectedCamera *av.Camera
+	imageStream    chan image.Image
+	imageMutex     sync.Mutex
+
+	microphones        []*av.Microphone
+	selectedMicrophone *av.Microphone
+	audioStream        chan []float32
+	audioMutex         sync.Mutex
+}
+
+func (r *Resolver) SetSelectedMicrophone(args *av.SelectedMicrophone) bool {
+	return false
+}
+
+func (r *Resolver) AudioMutex() <-chan []float32 {
+	return r.audioStream
+}
+
+func (r *Resolver) Microphones() []*av.Microphone {
+	return r.microphones
 }
 
 func (r *Resolver) ImageStream() <-chan image.Image {
@@ -24,14 +41,14 @@ func (r *Resolver) Cameras() []*av.Camera {
 }
 
 func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
-	if r.camera != nil {
-		err := r.camera.Close()
+	r.imageMutex.Lock()
+	defer r.imageMutex.Unlock()
+	if r.selectedCamera != nil {
+		err := r.selectedCamera.Close()
 		if err != nil {
 			log.Println(err)
 		}
-		r.camera = nil
+		r.selectedCamera = nil
 		r.cameras, err = av.GetCameras()
 		if err != nil {
 			log.Println(err)
@@ -39,22 +56,22 @@ func (r *Resolver) SetSelectedCamera(args *av.SelectedCamera) bool {
 	}
 	for _, camera := range r.cameras {
 		if camera.Id() == args.Id {
-			r.camera = camera
+			r.selectedCamera = camera
 		}
 	}
-	if r.camera == nil {
+	if r.selectedCamera == nil {
 		log.Println("camera not found")
 		return false
 	}
 	retries := 10
 	for retries > 0 {
 		retries--
-		err := r.camera.StartStreamingFromSelectedCamera(args)
+		err := r.selectedCamera.StartStreamingFromSelectedCamera(args)
 		if err != nil {
 			log.Println("retry", err)
 			continue
 		}
-		go r.camera.Stream(r.imageStream)
+		go r.selectedCamera.Stream(r.imageStream)
 		return true
 	}
 	return false
@@ -65,5 +82,14 @@ func NewResolver() *Resolver {
 	if err != nil {
 		log.Println(err)
 	}
-	return &Resolver{cameras: cameras, imageStream: make(chan image.Image, 10)}
+	microphones, err := av.GetMicrophones()
+	if err != nil {
+		log.Println(err)
+	}
+	return &Resolver{
+		cameras:     cameras,
+		imageStream: make(chan image.Image, 10),
+		microphones: microphones,
+		audioStream: make(chan []float32, 10),
+	}
 }

@@ -7,15 +7,26 @@ import (
 	"github.com/gordonklaus/portaudio"
 )
 
+type SelectedMicrophone struct {
+	Name string
+}
+
 type Microphone struct {
 	deviceInfo *portaudio.DeviceInfo
 	stream     *portaudio.Stream
+}
+
+func (m *Microphone) Name() string {
+	return m.deviceInfo.Name
 }
 
 func (m *Microphone) Close() error {
 	if m.stream == nil {
 		return nil
 	}
+	defer func() {
+		m.stream = nil
+	}()
 	return m.stream.Close()
 }
 
