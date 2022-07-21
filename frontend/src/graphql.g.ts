@@ -20,8 +20,15 @@ export type Camera = {
   supportedFormats: Array<SupportedFormat>;
 };
 
+export type Microphone = {
+  name: Scalars['String'];
+};
+
 export type Mutation = {
+  audioPath: Scalars['String'];
   setSelectedCamera: Scalars['Boolean'];
+  setSelectedMicrophone: Scalars['Boolean'];
+  videoPath: Scalars['String'];
 };
 
 
@@ -31,8 +38,14 @@ export type MutationSetSelectedCameraArgs = {
   id: Scalars['Int'];
 };
 
+
+export type MutationSetSelectedMicrophoneArgs = {
+  name: Scalars['String'];
+};
+
 export type Query = {
   cameras: Array<Camera>;
+  microphones: Array<Microphone>;
 };
 
 export type SupportedFormat = {
