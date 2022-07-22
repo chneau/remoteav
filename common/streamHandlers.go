@@ -9,12 +9,16 @@ import (
 	"net/http"
 	"net/textproto"
 	"strconv"
+	"sync"
 )
 
 const boundary = "frame"
 
 func StreamVideoHandler(ch <-chan image.Image) http.HandlerFunc {
+	mutex := &sync.Mutex{}
 	return func(w http.ResponseWriter, r *http.Request) {
+		mutex.Lock()
+		defer mutex.Unlock()
 		w.Header().Set("Content-Type", "multipart/x-mixed-replace;boundary="+boundary)
 		multipartWriter := multipart.NewWriter(w)
 		err := multipartWriter.SetBoundary(boundary)
@@ -44,7 +48,10 @@ func StreamVideoHandler(ch <-chan image.Image) http.HandlerFunc {
 }
 
 func StreamAudioHandler(ch <-chan []float32) http.HandlerFunc {
+	mutex := &sync.Mutex{}
 	return func(w http.ResponseWriter, r *http.Request) {
+		mutex.Lock()
+		defer mutex.Unlock()
 		w.Header().Set("Connection", "Keep-Alive")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
