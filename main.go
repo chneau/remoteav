@@ -21,7 +21,6 @@ func main() {
 	dist := http.FileServer(http.FS(lo.Must(fs.Sub(dist.FrontendDist, "dist"))))
 
 	router := chi.NewRouter()
-
 	router.Use(middleware.RequestID)
 	router.Use(middleware.RealIP)
 	router.Use(middleware.Recoverer)
@@ -34,7 +33,8 @@ func main() {
 
 	router.Handle("/graphql", &relay.Handler{Schema: schema})
 	router.Handle("/*", dist)
-	router.Get("/stream", common.StreamVideoHandler(resolver.VideoStream()))
+	router.Get(common.VideoPath, common.StreamVideoHandler(resolver.VideoStream()))
+	router.Get(common.AudioPath, common.StreamAudioHandler(resolver.AudioStream()))
 
 	fmt.Println("Listening on port http://localhost:7777")
 	lo.Must0(http.ListenAndServe(":7777", router))
