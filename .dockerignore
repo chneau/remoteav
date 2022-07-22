@@ -6,3 +6,4 @@ cmd
 .gitignore
 LICENSE
 README.md
+Dockerfile
