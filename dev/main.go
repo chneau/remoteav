@@ -16,16 +16,6 @@ import (
 )
 
 func main() {
-	// microphones := lo.Must(av.GetMicrophones())
-	// fmt.Print("\033[H\033[2J") // Clear screen
-	// log.Printf("microphones: %#+v\n", microphones)
-	// audio := make(chan []float32)
-	// microphones[0].Stream(audio)
-	// defer microphones[0].Close()
-	// for frame := range audio {
-	// 	log.Println("frame:", len(frame))
-	// }
-
 	log.SetFlags(log.LstdFlags | log.Llongfile)
 	resolver := common.NewResolver()
 	schema := graphql.MustParseSchema(common.SchemaString, resolver)

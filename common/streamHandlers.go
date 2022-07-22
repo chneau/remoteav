@@ -11,10 +11,11 @@ import (
 	"strconv"
 )
 
+const boundary = "frame"
+
 func StreamVideoHandler(ch <-chan image.Image) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const boundary = `frame`
-		w.Header().Set("Content-Type", `multipart/x-mixed-replace;boundary=`+boundary)
+		w.Header().Set("Content-Type", "multipart/x-mixed-replace;boundary="+boundary)
 		multipartWriter := multipart.NewWriter(w)
 		err := multipartWriter.SetBoundary(boundary)
 		if err != nil {
