@@ -1,64 +1,35 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { Button, ButtonsDiv, StreamDiv, WhiteText } from "./components";
 import {
   SetSelectedCameraMutationVariables,
   useGetAllCamerasQuery,
   useGetAllMicrophonesQuery,
   useGetVideoPathQuery,
   useSetSelectedCameraMutation,
+  useSetSelectedMicrophoneMutation,
 } from "./graphql.g";
-
-const Button = styled.button`
-  opacity: 0.15;
-  &:hover {
-    opacity: 0.6;
-  }
-`;
-
-const StreamDiv = styled.div<{ stream: string }>`
-  min-height: 100vh;
-  background-image: url(${(x) => x.stream});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-color: black;
-`;
-
-const ButtonsDiv = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-  > :last-child {
-    text-align: right;
-  }
-`;
 
 export const App = () => {
   const { data: cameras } = useGetAllCamerasQuery();
   const { data: videoPath } = useGetVideoPathQuery();
   const { data: microphones } = useGetAllMicrophonesQuery();
-  const videoStreamPath = videoPath?.videoPath ?? "";
   const [selectedCamera, setSelectedCamera] = useState<SetSelectedCameraMutationVariables>();
   const [selectedMicrophone, setSelectedMicrophone] = useState<string>();
   const [setSelectedCameraMutation] = useSetSelectedCameraMutation();
-  const [isSuccess, setIsSuccess] = useState<boolean | undefined>(undefined);
-  const selectedCameraText = (selectedCamera && `(${selectedCamera.id} ${selectedCamera.format} ${selectedCamera.frameSize}) => ${isSuccess}`) || "";
+  const [setSelectedMicrophoneMutation] = useSetSelectedMicrophoneMutation();
+  useEffect(() => {
+    if (!selectedMicrophone) return;
+    (async () => console.log((await setSelectedMicrophoneMutation({ variables: { name: selectedMicrophone } })).data))();
+  }, [selectedMicrophone]);
+
   useEffect(() => {
     if (!selectedCamera) return;
-    (async () => {
-      setIsSuccess(undefined);
-      const result = await setSelectedCameraMutation({ variables: selectedCamera });
-      setIsSuccess(result.data?.setSelectedCamera);
-    })();
-    document.title = selectedCameraText;
-  }, [selectedCamera]);
+    (async () => console.log((await setSelectedCameraMutation({ variables: selectedCamera })).data))();
+    document.title = selectedCamera ? `${selectedCamera.id} ${selectedCamera.format} ${selectedCamera.frameSize}` : "";
+  }, [JSON.stringify(selectedCamera)]);
   return (
     <>
-      <StreamDiv stream={videoStreamPath} />
+      {videoPath?.videoPath && <StreamDiv stream={videoPath.videoPath} />}
       <ButtonsDiv>
         <div>
           {cameras?.cameras.map(({ id, supportedFormats }) =>
@@ -73,12 +44,15 @@ export const App = () => {
             )
           )}
         </div>
+        <WhiteText>
+          Video: {selectedCamera ? `${selectedCamera.id} _ ${selectedCamera.format} _ ${selectedCamera.frameSize}` : "none"}
+          <br />
+          Audio: {selectedMicrophone || "none"}
+        </WhiteText>
         <div>
           {microphones?.microphones.map(({ name }, i) => (
-            <div>
-              <Button key={name + i} onClick={() => setSelectedMicrophone(name)}>
-                {name}
-              </Button>
+            <div key={name + i}>
+              <Button onClick={() => setSelectedMicrophone(name)}>{name}</Button>
             </div>
           ))}
         </div>
