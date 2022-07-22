@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useGetVideoPathQuery } from "./graphql.g";
 
 export const WhiteText = styled.div`
   color: white;
@@ -11,7 +12,7 @@ export const Button = styled.button`
   }
 `;
 
-export const StreamDiv = styled.div<{ stream: string }>`
+const StreamDiv_ = styled.div<{ stream: string }>`
   min-height: 100vh;
   background-image: url(${(x) => x.stream});
   background-position: center;
@@ -19,6 +20,12 @@ export const StreamDiv = styled.div<{ stream: string }>`
   background-size: contain;
   background-color: black;
 `;
+
+export const StreamDiv = () => {
+  const { data } = useGetVideoPathQuery();
+  if (!data?.videoPath) return null;
+  return <StreamDiv_ stream={data.videoPath} />;
+};
 
 export const ButtonsDiv = styled.div`
   position: absolute;

@@ -4,14 +4,12 @@ import {
   SetSelectedCameraMutationVariables,
   useGetAllCamerasQuery,
   useGetAllMicrophonesQuery,
-  useGetVideoPathQuery,
   useSetSelectedCameraMutation,
   useSetSelectedMicrophoneMutation,
 } from "./graphql.g";
 
 export const App = () => {
   const { data: cameras } = useGetAllCamerasQuery();
-  const { data: videoPath } = useGetVideoPathQuery();
   const { data: microphones } = useGetAllMicrophonesQuery();
   const [selectedCamera, setSelectedCamera] = useState<SetSelectedCameraMutationVariables>();
   const [selectedMicrophone, setSelectedMicrophone] = useState<string>();
@@ -29,7 +27,7 @@ export const App = () => {
   }, [JSON.stringify(selectedCamera)]);
   return (
     <>
-      {videoPath?.videoPath && <StreamDiv stream={videoPath.videoPath} />}
+      <StreamDiv />
       <ButtonsDiv>
         <div>
           {cameras?.cameras.map(({ id, supportedFormats }) =>
