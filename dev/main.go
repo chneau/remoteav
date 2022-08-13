@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"time"
 
 	"github.com/chneau/remoteav/common"
 	"github.com/go-chi/chi/v5"
@@ -29,7 +28,6 @@ func main() {
 	router.Use(middleware.GetHead)
 	router.Use(middleware.StripSlashes)
 	router.Use(middleware.Compress(5))
-	router.Use(middleware.Timeout(3 * time.Second))
 
 	router.With(middleware.Logger).Handle("/graphql", &relay.Handler{Schema: schema})
 	router.Get("/graphiql", graphiqlHandler)
