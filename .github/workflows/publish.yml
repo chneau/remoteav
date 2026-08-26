@@ -11,7 +11,7 @@ jobs:
       IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/remoteav
       DOCKERFILE: Dockerfile
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - run: echo "${{ github.token }}" | docker login ghcr.io --username $ --password-stdin
       - run: docker build --file $DOCKERFILE --tag $IMAGE_NAME .
       - run: docker push $IMAGE_NAME
